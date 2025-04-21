@@ -64,6 +64,11 @@ def build_parser():
 Use "HEADLESS=True pip install ." to build in headless mode with pip""",
     )
     parser.add_argument(
+        "--parallel",
+        type=int,
+        help="Number of cores to use when compiling",
+    )
+    parser.add_argument(
         "--with-cuda",
         action="store_true",
         default=str2bool(os.environ.get("WITH_CUDA", "False")),
@@ -307,6 +312,8 @@ class CMakeBuild(build_ext):
         cmake_args += ["-DCMAKE_BUILD_TYPE=" + build_type]
 
         build_args += ["--"]
+
+        self.parallel = args.parallel
 
         if has_ninja():
             cmake_args += ["-GNinja"]
